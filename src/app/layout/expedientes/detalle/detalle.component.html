@@ -1,0 +1,394 @@
+<div [@routerTransition]>
+    <toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+    <app-page-header [heading]="'Detalle'" [dependencia]='' [icon]="'fa-edit'"></app-page-header>
+    <hr>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card-body">
+                <form class="form-inline">
+                    <label class="mr-sm-2" for="prefijo">Prefijo</label>
+                    <input [(ngModel)]="prefijo" [ngModelOptions]="{standalone: true}" type="text" class="form-control mb-2 mr-sm-2 mb-sm-0"
+                        id="prefijo" placeholder="4069">
+
+                    <label class="mr-sm-2" for="numero">Numero</label>
+                    <input [(ngModel)]="numero" [ngModelOptions]="{standalone: true}" type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="numero"
+                        placeholder="000000">
+
+                    <label class="mr-sm-2" for="anio">Año</label>
+                    <input [(ngModel)]="anio" [ngModelOptions]="{standalone: true}" type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="anio"
+                        placeholder="2018">
+
+                    <button [disabled]="noPuedeFiltrar()" class="btn btn-primary" (click)="btnFiltrar()">Filtrar</button>
+                </form>
+                <br/>
+                <div id="datos_exp">
+                    <div *ngFor="let expediente of expedientes">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card mb-3">
+                                    <div class="card-header">Datos del Expediente</div>
+                                    <div class="card-body">
+                                        <div class="container">
+                                            <div class="row p-1 ">
+                                                <div class="col border p-2">
+                                                    <div class="row ">
+                                                        <div class="col">
+                                                            <b>Prefijo:</b>
+                                                        </div>
+                                                        <div class="col">
+                                                            {{expediente.prefijo}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col border p-2">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <b>Número:</b>
+                                                        </div>
+                                                        <div class="col">
+                                                            {{expediente.numero}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col border p-2">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <b>Año:</b>
+                                                        </div>
+                                                        <div class="col">
+                                                            {{expediente.anio}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col border p-2">
+                                                    <div class="row">
+                                                        <div class="col" *ngIf="esArchivo(expediente.Desc_Organigrama)">
+                                                            <b>Está en Archivo</b>
+                                                        </div>
+                                                        <div class="col" *ngIf="!esArchivo(expediente.Desc_Organigrama)">
+                                                            <b>NO Está en Archivo</b>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row  p-1 ">
+                                                <div class="col border col-12 p-2">
+                                                    <div class="row">
+                                                        <div class="col col-2">
+                                                            <b>Extracto:</b>
+                                                        </div>
+                                                        <div class="col col-10">
+                                                            {{expediente.estracto}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row p-1 ">
+                                                <div class="col border col-3 p-2">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <b>Fecha:</b>
+                                                        </div>
+                                                        <div class="col">
+                                                            {{expediente.fecha_ingreso}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col border col-9 p-2">
+                                                    <div class="row">
+                                                        <div class="col col-3">
+                                                            <b>Tipo de Expediente:</b>
+                                                        </div>
+                                                        <div class="col col-3">
+                                                            {{expediente.Codigo_Tipo}}
+                                                        </div>
+                                                        <div class="col col-6">
+                                                            {{expediente.Desc_Tipo}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="row p-1 ">
+                                                <div class="col border col-9 p-2">
+                                                    <div class="row">
+                                                        <div class="col col-3">
+                                                            <b>Organigrama:</b>
+                                                        </div>
+                                                        <div class="col col-3">
+                                                            {{expediente.id_organigrama}}
+                                                        </div>
+                                                        <div class="col col-6">
+                                                            {{expediente.Desc_Organigrama}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col border col-3 p-2">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <b>Extensión:</b>
+                                                        </div>
+                                                        <div class="col">
+                                                            {{expediente.extension}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--<pre> {{expediente | json}}</pre>-->
+                                    <!--<div class="container">
+                                <div class="row" *ngFor="let expediente of expedientes">
+                                    <div class="card  mb-3 col-12">
+                                        
+                                        <div class="card-body">
+                                            <div class="col  col-3">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            Prefijo
+                                                        </div>
+                                                        <div class="col">
+                                                            {{expediente.prefijo}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col col-3">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        Numero
+                                                    </div>
+                                                    <div class="col">
+                                                        {{expediente.numero}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col col-3">
+                                                1 of 2
+                                            </div>
+                                            <div class="col col-3">
+                                                2 of 2
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="datos_ini">
+                            <div class="col-sm-12">
+                                <div class="card mb-3">
+                                    <div class="card-header">Datos del Iniciador</div>
+                                    <!-- Large modal -->
+                                    <div class="card-body">
+                                        <div class="container">
+                                            <div class="row p-1 ">
+                                                <div class="col border col-7 p-2">
+                                                    <div class="row">
+                                                        <div class="col col-3">
+                                                            <b>Iniciador:</b>
+                                                        </div>
+                                                        <div class="col col-9">
+                                                            {{expediente.iniciador}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col border col-5 p-2">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <b>Tipo - Nro Doc:</b>
+                                                        </div>
+                                                        <div class="col">
+                                                            {{expediente.Tipo_Doc}}
+                                                        </div>
+                                                        <div class="col">
+                                                            {{expediente.Nro_Doc}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="row p-1 ">
+                                                <div class="col border p-2">
+                                                    <div class="row ">
+                                                        <div class="col">
+                                                            <b>Calle:</b>
+                                                        </div>
+                                                        <div class="col">
+                                                            {{expediente.Calle}}
+                                                        </div>
+                                                        <div class="col">
+                                                            {{expediente.Altura}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col border p-2">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <b>Localidad:</b>
+                                                        </div>
+                                                        <div class="col">
+                                                            {{expediente.Localidad}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col border p-2">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <b>Código Postal:</b>
+                                                        </div>
+                                                        <div class="col">
+                                                            {{expediente.CP}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row p-1 ">
+                                                <div class="col border col-5 p-2">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <b>Telefono:</b>
+                                                        </div>
+                                                        <div class="col">
+                                                            {{expediente.TE}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col border col-7 p-2">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <b>Email:</b>
+                                                        </div>
+                                                        <div class="col">
+                                                            {{expediente.Mail}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="tienePases()">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="card mb-3">
+                                        <div class="card-header">Pases</div>
+                                        <!-- Large modal -->
+                                        <div class="card-body">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 4.166%">Id Pase</th>
+                                                        <th style="width: 4.166%">Id Remito</th>
+                                                        <th style="width: 13.66%">Fecha Pase</th>
+                                                        <th style="width: 20.844%">Origen</th>
+                                                        <th style="width: 1%">=></th>
+                                                        <th style="width: 20.844%">Destino</th>
+                                                        <th style="width: 13.66%">Fecha Recepcion</th>
+                                                        <th style="width: 21.66%">Resp Recepcion</th>
+
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody *ngFor="let pase of pases">
+                                                    <tr>
+                                                        <th scope="row">{{ pase.ID_Pase }}</th>
+                                                        <th scope="row">{{ pase.Nro_Remito }}</th>
+                                                        <td>{{ formatDate(pase.Fecha_Pase,2) }}</td>
+                                                        <th scope="row">{{ pase.ID_Origen }} - {{ pase.Desc_Origen }}</th>
+                                                        <th scope="row">=></th>
+                                                        <th scope="row">{{ pase.ID_Destino }} - {{ pase.Desc_Destino }}</th>
+                                                        <td>{{ formatDate(pase.Fecha_Recepcion,2) }}</td>
+                                                        <th scope="row">{{ pase.Responsable_Recepcion }}</th>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="tieneRespuestas()">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="card mb-3">
+                                        <div class="card-header">Respuestas</div>
+                                        <!-- Large modal -->
+                                        <div class="card-body">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 4%">Id Rta</th>
+                                                        <th style="width: 8%">Tipo Rta</th>
+                                                        <th style="width: 14%">Fecha Rta</th>
+                                                        <th style="width: 20%">Descripcion</th>
+                                                        <th style="width: 14%">Usuario</th>
+                                                        <th style="width: 40%">Texto</th>
+
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody *ngFor="let respuesta of respuestas">
+                                                    <tr>
+                                                        <th scope="row">{{ respuesta.Rta_ID }}</th>
+                                                        <th scope="row">{{ respuesta.Tipo_Rta }}</th>
+                                                        <td>{{ formatDate(respuesta.Fecha_Rta,2) }}</td>
+                                                        <th scope="row">{{ respuesta.Descripcion }}</th>
+                                                        <th scope="row">{{ respuesta.Usuario }}</th>
+                                                        <th scope="row">{{ respuesta.Texto }}</th>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!--<div class="col-sm-12">
+                                <div class="card mb-3">
+                                    <div class="card-header">Archivos Atachados</div>
+                                
+                                    <div class="card-body">
+                                        <button class="btn btn-primary" (click)="open(content)">Large modal</button>
+                                        <ng-template #content let-c="close" let-d="dismiss">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Modal title</h4>
+                                                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>One fine body&hellip;</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+                                            </div>
+                                        </ng-template>
+                                    </div>
+                                </div>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="card-body">
+                <button type="button" class="btn btn-info" (click)="imprimirExpediente()">Imprimir Expediente</button>
+            </div>
+        </div>
+    </div>

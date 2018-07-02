@@ -1,0 +1,185 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+SameApi
+</name>
+</assembly>
+<members>
+<member name="P:SameApi.My.MyWebExtension.Computer">
+	<summary>
+ Returns information about the host computer.
+ </summary>
+</member><member name="P:SameApi.My.MyWebExtension.User">
+	<summary>
+ Returns information for the current Web user.
+ </summary>
+</member><member name="P:SameApi.My.MyWebExtension.Request">
+	<summary>
+ Returns Request object.
+ </summary>
+</member><member name="P:SameApi.My.MyWebExtension.Response">
+	<summary>
+ Returns Response object.
+ </summary>
+</member><member name="P:SameApi.My.MyWebExtension.Log">
+	<summary>
+ Returns the Asp log object.
+ </summary>
+</member><member name="T:SameApi.My.MyWebExtension">
+	<summary>
+ Module used to define the properties that are available in the My Namespace for Web projects.
+ </summary>
+	<remarks></remarks>
+</member><member name="P:SameApi.My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:SameApi.My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:SameApi.My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member><member name="T:SameApi.dsExpediente.SA_V_ExpedientesDataTable">
+	<summary>
+Represents the strongly named DataTable class.
+</summary>
+</member><member name="T:SameApi.dsExpediente.SA_V_Pases_por_Expediente_WEBDataTable">
+	<summary>
+Represents the strongly named DataTable class.
+</summary>
+</member><member name="T:SameApi.dsExpediente.SA_V_RespuestasDataTable">
+	<summary>
+Represents the strongly named DataTable class.
+</summary>
+</member><member name="T:SameApi.dsExpediente.SA_V_ExpedientesRow">
+	<summary>
+Represents strongly named DataRow class.
+</summary>
+</member><member name="T:SameApi.dsExpediente.SA_V_Pases_por_Expediente_WEBRow">
+	<summary>
+Represents strongly named DataRow class.
+</summary>
+</member><member name="T:SameApi.dsExpediente.SA_V_RespuestasRow">
+	<summary>
+Represents strongly named DataRow class.
+</summary>
+</member><member name="T:SameApi.dsExpediente.SA_V_ExpedientesRowChangeEvent">
+	<summary>
+Row event argument class
+</summary>
+</member><member name="T:SameApi.dsExpediente.SA_V_Pases_por_Expediente_WEBRowChangeEvent">
+	<summary>
+Row event argument class
+</summary>
+</member><member name="T:SameApi.dsExpediente.SA_V_RespuestasRowChangeEvent">
+	<summary>
+Row event argument class
+</summary>
+</member><member name="T:SameApi.dsExpediente">
+	<summary>
+Represents a strongly typed in-memory cache of data.
+</summary>
+</member><member name="T:SameApi.dsExpedienteTableAdapters.SA_V_ExpedientesTableAdapter">
+	<summary>
+Represents the connection and commands used to retrieve and save data.
+</summary>
+</member><member name="T:SameApi.dsExpedienteTableAdapters.SA_V_Pases_por_Expediente_WEBTableAdapter">
+	<summary>
+Represents the connection and commands used to retrieve and save data.
+</summary>
+</member><member name="T:SameApi.dsExpedienteTableAdapters.SA_V_RespuestasTableAdapter">
+	<summary>
+Represents the connection and commands used to retrieve and save data.
+</summary>
+</member><member name="M:SameApi.dsExpedienteTableAdapters.TableAdapterManager.UpdateUpdatedRows(SameApi.dsExpediente,System.Collections.Generic.List{System.Data.DataRow},System.Collections.Generic.List{System.Data.DataRow})">
+	<summary>
+Update rows in top-down order.
+</summary>
+</member><member name="M:SameApi.dsExpedienteTableAdapters.TableAdapterManager.UpdateInsertedRows(SameApi.dsExpediente,System.Collections.Generic.List{System.Data.DataRow})">
+	<summary>
+Insert rows in top-down order.
+</summary>
+</member><member name="M:SameApi.dsExpedienteTableAdapters.TableAdapterManager.UpdateDeletedRows(SameApi.dsExpediente,System.Collections.Generic.List{System.Data.DataRow})">
+	<summary>
+Delete rows in bottom-up order.
+</summary>
+</member><member name="M:SameApi.dsExpedienteTableAdapters.TableAdapterManager.GetRealUpdatedRows(System.Data.DataRow[],System.Collections.Generic.List{System.Data.DataRow})">
+	<summary>
+Remove inserted rows that become updated rows after calling TableAdapter.Update(inserted rows) first
+</summary>
+</member><member name="M:SameApi.dsExpedienteTableAdapters.TableAdapterManager.UpdateAll(SameApi.dsExpediente)">
+	<summary>
+Update all changes to the dataset.
+</summary>
+</member><member name="T:SameApi.dsExpedienteTableAdapters.TableAdapterManager.UpdateOrderOption">
+	<summary>
+Update Order Option
+</summary>
+</member><member name="T:SameApi.dsExpedienteTableAdapters.TableAdapterManager.SelfReferenceComparer">
+	<summary>
+Used to sort self-referenced table's rows
+</summary>
+</member><member name="T:SameApi.dsExpedienteTableAdapters.TableAdapterManager">
+	<summary>
+TableAdapterManager is used to coordinate TableAdapters in the dataset to enable Hierarchical Update scenarios
+</summary>
+</member><member name="T:SameApi.DSRemito.SA_V_Pases_por_ExpedienteDataTable">
+	<summary>
+Represents the strongly named DataTable class.
+</summary>
+</member><member name="T:SameApi.DSRemito.SA_V_Pases_por_ExpedienteRow">
+	<summary>
+Represents strongly named DataRow class.
+</summary>
+</member><member name="T:SameApi.DSRemito.SA_V_Pases_por_ExpedienteRowChangeEvent">
+	<summary>
+Row event argument class
+</summary>
+</member><member name="T:SameApi.DSRemito">
+	<summary>
+Represents a strongly typed in-memory cache of data.
+</summary>
+</member><member name="T:SameApi.DSRemitoTableAdapters.SA_V_Pases_por_ExpedienteTableAdapter">
+	<summary>
+Represents the connection and commands used to retrieve and save data.
+</summary>
+</member><member name="M:SameApi.DSRemitoTableAdapters.TableAdapterManager.UpdateUpdatedRows(SameApi.DSRemito,System.Collections.Generic.List{System.Data.DataRow},System.Collections.Generic.List{System.Data.DataRow})">
+	<summary>
+Update rows in top-down order.
+</summary>
+</member><member name="M:SameApi.DSRemitoTableAdapters.TableAdapterManager.UpdateInsertedRows(SameApi.DSRemito,System.Collections.Generic.List{System.Data.DataRow})">
+	<summary>
+Insert rows in top-down order.
+</summary>
+</member><member name="M:SameApi.DSRemitoTableAdapters.TableAdapterManager.UpdateDeletedRows(SameApi.DSRemito,System.Collections.Generic.List{System.Data.DataRow})">
+	<summary>
+Delete rows in bottom-up order.
+</summary>
+</member><member name="M:SameApi.DSRemitoTableAdapters.TableAdapterManager.GetRealUpdatedRows(System.Data.DataRow[],System.Collections.Generic.List{System.Data.DataRow})">
+	<summary>
+Remove inserted rows that become updated rows after calling TableAdapter.Update(inserted rows) first
+</summary>
+</member><member name="M:SameApi.DSRemitoTableAdapters.TableAdapterManager.UpdateAll(SameApi.DSRemito)">
+	<summary>
+Update all changes to the dataset.
+</summary>
+</member><member name="T:SameApi.DSRemitoTableAdapters.TableAdapterManager.UpdateOrderOption">
+	<summary>
+Update Order Option
+</summary>
+</member><member name="T:SameApi.DSRemitoTableAdapters.TableAdapterManager.SelfReferenceComparer">
+	<summary>
+Used to sort self-referenced table's rows
+</summary>
+</member><member name="T:SameApi.DSRemitoTableAdapters.TableAdapterManager">
+	<summary>
+TableAdapterManager is used to coordinate TableAdapters in the dataset to enable Hierarchical Update scenarios
+</summary>
+</member>
+</members>
+</doc>

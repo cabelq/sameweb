@@ -1,0 +1,347 @@
+<div [@routerTransition]>
+    <toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+    <app-page-header [heading]="'Despacho'" [dependencia]='[organigrama]' [icon]="'fa-edit'"></app-page-header>
+
+    <aw-wizard>
+        <aw-wizard-step stepTitle="Seleccionar Expedientes">
+            <div class="row">
+
+                <div class="col-lg-9" data-toggle="collapse">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fa fa-clock-o fa-fw"></i> Expedientes en Oficina
+                        </div>
+
+                        <div class="card-body">
+                            <form class="form-inline">
+                                <input [(ngModel)]="prefijo" [ngModelOptions]="{standalone: true}" type="text" class="form-control mb-1 mr-sm-1 mb-sm-0"
+                                    id="prefijo" placeholder="Prefijo">
+
+                                <input [(ngModel)]="numero" [ngModelOptions]="{standalone: true}" type="text" class="form-control mb-1 mr-sm-1 mb-sm-0" id="numero"
+                                    placeholder="Número">
+
+                                <input [(ngModel)]="anio" [ngModelOptions]="{standalone: true}" type="text" class="form-control mb-1 mr-sm-1 mb-sm-0" id="anio"
+                                    placeholder="Año">
+
+                                <input [(ngModel)]="extracto" [ngModelOptions]="{standalone: true}" type="text" class="form-control mb-1 mr-sm-1 mb-sm-0"
+                                    id="extracto" placeholder="Extracto">
+                                <button class="btn btn-primary" (click)="btnFiltrar()">Filtrar</button>
+
+                            </form>
+                            <br/>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 4.166%">Prefijo</th>
+                                        <th style="width: 8.33%">Nro</th>
+                                        <th style="width: 4.166%">Año</th>
+                                        <th style="width: 8.33%">Extensión</th>
+                                        <th style="width: 14%">F.Ingreso</th>
+                                        <th>Extracto</th>
+                                        <th>Pase</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody *ngFor="let expediente of pagedItems">
+                                    <tr>
+                                        <th scope="row">{{ expediente.prefijo }}</th>
+                                        <th scope="row">{{ expediente.numero }}</th>
+                                        <th scope="row">{{ expediente.anio }}</th>
+                                        <th scope="row">{{ expediente.extension }}</th>
+                                        <td>{{ formatDate(expediente.fecha_ingreso,2) }}</td>
+                                        <td>{{ expediente.estracto }}</td>
+                                        <td>
+                                            <button class="btn btn-primary" (click)="btnPasar(expediente)">Pasar</button>
+                                        </td>
+                                        <td>
+                                            <button *ngIf="sinRecibir(expediente.fecha_recepcion)" class="btn btn-primary">Recibir</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <nav aria-label="Expedientes" *ngIf="pager.pages && pager.pages.length">
+                                <ul class="pagination pagination-sm justify-content-center">
+                                    <li class="page-item" [ngClass]="{disabled:pager.currentPage === 1}">
+                                        <a class="page-link" (click)="setPage(1)">&lt;&lt;</a>
+                                    </li>
+                                    <li class="page-item" [ngClass]="{disabled:pager.currentPage === 1}">
+                                        <a class="page-link" (click)="setPage(pager.currentPage - 1)">&lt;</a>
+                                    </li>
+                                    <li class="page-item" *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                        <a class="page-link" (click)="setPage(page)">{{page}}</a>
+                                    </li>
+                                    <li class="page-item" [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                        <a class="page-link" (click)="setPage(pager.currentPage + 1)">&gt;</a>
+                                    </li>
+                                    <li class="page-item" [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                        <a class="page-link" (click)="setPage(pager.totalPages)">&gt;&gt;</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fa fa-clock-o fa-fw"></i> Expedientes Seleccionados
+                        </div>
+
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item" *ngFor="let expediente of pase.expedientes">{{ expediente.prefijo }} - {{ expediente.numero }} - {{ expediente.anio }} &nbsp;&nbsp;
+                                    <button type="button" class="btn btn-danger" (click)="btnBorrar(expediente)">X</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <button [disabled]="!tieneExpedientesSeleccionados()" type="button" class="btn btn-info" awNextStep>Próximo Pase</button>
+            </div>
+            <!--<button type="button" [awGoToStep]="{stepIndex: 2}">Go directly to third Step</button>  justify-content-md-center-->
+        </aw-wizard-step>
+        <aw-wizard-step stepTitle="Cargar Respuestas">
+            <div class="row">
+                <div class="col-xl-6 text-xs-center" *ngFor="let expediente of pase.expedientes; let i = index">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="card-header">
+                                <b>{{ expediente.prefijo }} - {{ expediente.numero }} - {{ expediente.anio }}</b>
+                            </div>
+
+                            <div class="card-body">
+                                {{ expediente.extracto }}
+                                <!--<div class="row">
+                                    <div class="col-xl-12 text-xs-center">
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label>Ubicación</label>
+                                                    <select class="form-control">
+                                                        <option *ngFor="let tipo of tipos_ubicaciones; let i = index">{{tipo.ubicacion}}</option>
+                                                    </select>
+                                                    <label>Ubicación Descropcion</label>
+                                                    <select class="form-control">
+                                                        <option *ngFor="let tipo of tipos_ubicaciones; let i = index">{{tipo.ubicacion}}</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                  
+                                </div>
+-->
+                                <div>
+                                    <!--<pre>Pase: {{ pase.expedientes | json }}</pre>-->
+                                    <label>
+                                        <b>Respuesta</b>
+                                    </label>
+                                    <textarea [(ngModel)]="pase.expedientes[i].respuesta" name="repuesta[i]" class="form-control" id="repuesta[i]" rows="3"></textarea>
+                                    <!--<ckeditor
+                                    [(ngModel)]="pase.expedientes[i].respuesta"        
+                                    [readonly]="false"
+                                    debounce="500">
+                                  </ckeditor>-->
+                                    <!--[config]="{uiColor: '#99000'}"                                    (change)="onChange($event)"
+                                    (editorChange)="onEditorChange($event)" 
+                                    (ready)="onReady($event)"
+                                    (focus)="onFocus($event)"
+                                    (blur)="onBlur($event)"
+                                    (contentDom)="onContentDom($event)"
+                                    (fileUploadRequest)="onFileUploadRequest($event)"
+-->
+                                    <!--<input name="repuesta[i]" [(ngModel)]="pase.expedientes[i].respuesta">-->
+                                </div>
+                                <!--<h5 class="card-title">Special title treatment</h5>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--</div>-->
+            <hr>
+            <div class="text-center">
+                <button type="button" class="btn btn-info" awPreviousStep>Paso Anterior</button>
+                <button type="button" class="btn btn-info" awNextStep [disabled]="!tieneRespuestas()">Próximo Paso</button>
+            </div>
+        </aw-wizard-step>
+        <aw-wizard-step stepTitle="Seleccionar Destino" awOptionalStep>
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        Destino
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <app-arbolorganigrama (onSeleccion)="onSeleccionOrganigrama($event)"></app-arbolorganigrama>
+                            </div>
+                            <div class="col-lg-6" *ngIf="pase.organigrama">
+                                {{ pase.organigrama.descripcion }}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <button type="button" class="btn btn-info" awPreviousStep>Paso Anterior</button>
+                <button [disabled]="!tieneDestinoSeleccionado()" type="button" class="btn btn-info" awNextStep>Próximo Paso</button>
+            </div>
+        </aw-wizard-step>
+        <aw-wizard-step stepTitle="Finalizar Pase">
+            <br>
+            <h5 *ngIf="pase.organigrama">Pasar a <b>{{ pase.organigrama.descripcion }}</b> los siguientes expedientes</h5>
+            <br>
+            <div class="card bg-light mb-4" *ngFor="let expediente of pase.expedientes; let i = index">
+                <div class="card-header">
+                    <b>{{ expediente.prefijo }} - {{ expediente.numero }} - {{ expediente.anio }}</b>
+                </div>
+                <div class="card-body">
+                    <h6>{{ expediente.extracto }}</h6>
+
+                    <h6 class="card-title">RESPUESTA</h6>
+                    <p class="card-text">{{ expediente.respuesta }}</p>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <button *ngIf="!remito_nro" type="button" class="btn btn-info" awPreviousStep>Paso Anterior</button>
+                <button *ngIf="!remito_nro"type="button" class="btn btn-info" (click)="confirmarPase()">Confirmar Pase</button>
+                <button *ngIf="remito_nro" type="button" class="btn btn-info" (click)="imprimirRemito()">Imprimir Remito</button>
+            </div>
+        </aw-wizard-step>
+    </aw-wizard>
+
+    <!--<div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    Destino
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <app-arbolorganigrama (onSeleccion)="onSeleccionOrganigrama($event)"></app-arbolorganigrama>
+                        </div>
+                        <div class="col-lg-6" *ngIf="organigramasel">
+                            {{ organigramasel.value }}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <div class="row">
+        <div id="accordion">
+            <div class="col-lg-12" data-toggle="collapse">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-clock-o fa-fw"></i> Expedientes en Oficina
+                    </div>
+
+                    <div class="card-body">
+                        <form class="form-inline">
+                            <input [(ngModel)]="prefijo" [ngModelOptions]="{standalone: true}" type="text" class="form-control mb-1 mr-sm-1 mb-sm-0"
+                                id="prefijo" placeholder="Prefijo">
+
+                            <input [(ngModel)]="numero" [ngModelOptions]="{standalone: true}" type="text" class="form-control mb-1 mr-sm-1 mb-sm-0" id="numero"
+                                placeholder="Número">
+
+                            <input [(ngModel)]="anio" [ngModelOptions]="{standalone: true}" type="text" class="form-control mb-1 mr-sm-1 mb-sm-0" id="anio"
+                                placeholder="Año">
+
+                            <input [(ngModel)]="extracto" [ngModelOptions]="{standalone: true}" type="text" class="form-control mb-1 mr-sm-1 mb-sm-0"
+                                id="extracto" placeholder="Extracto">
+                            <button class="btn btn-primary" (click)="btnFiltrar()">Filtrar</button>
+
+                        </form>
+                        <br/>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="width: 4.166%">Prefijo</th>
+                                    <th style="width: 8.33%">Nro</th>
+                                    <th style="width: 4.166%">Año</th>
+                                    <th style="width: 8.33%">Extensión</th>
+                                    <th style="width: 14%">F.Ingreso</th>
+                                    <th>Extracto</th>
+                                    <th>Pase</th>
+                                </tr>
+                            </thead>
+
+                            <tbody *ngFor="let expediente of pagedItems">
+                                <tr>
+                                    <th scope="row">{{ expediente.prefijo }}</th>
+                                    <th scope="row">{{ expediente.numero }}</th>
+                                    <th scope="row">{{ expediente.anio }}</th>
+                                    <th scope="row">{{ expediente.extension }}</th>
+                                    <td>{{ formatDate(expediente.fecha_ingreso,2) }}</td>
+                                    <td>{{ expediente.estracto }}</td>
+                                    <td>
+                                        <button class="btn btn-primary" (click)="btnPasar(expediente)">Pasar</button>
+                                    </td>
+                                    <td>
+                                        <button *ngIf="sinRecibir(expediente.fecha_recepcion)" class="btn btn-primary">Recibir</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <nav aria-label="Expedientes" *ngIf="pager.pages && pager.pages.length">
+                            <ul class="pagination pagination-sm justify-content-center">
+                                <li class="page-item" [ngClass]="{disabled:pager.currentPage === 1}">
+                                    <a class="page-link" (click)="setPage(1)">&lt;&lt;</a>
+                                </li>
+                                <li class="page-item" [ngClass]="{disabled:pager.currentPage === 1}">
+                                    <a class="page-link" (click)="setPage(pager.currentPage - 1)">&lt;</a>
+                                </li>
+                                <li class="page-item" *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                    <a class="page-link" (click)="setPage(page)">{{page}}</a>
+                                </li>
+                                <li class="page-item" [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                    <a class="page-link" (click)="setPage(pager.currentPage + 1)">&gt;</a>
+                                </li>
+                                <li class="page-item" [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                    <a class="page-link" (click)="setPage(pager.totalPages)">&gt;&gt;</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-clock-o fa-fw"></i> Expedientes Seleccionados
+                </div>
+
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item" *ngFor="let expediente of expedientessel">{{ expediente.prefijo }} - {{ expediente.numero }} - {{ expediente.anio }} &nbsp;&nbsp;
+                            <button type="button"
+                                class="btn btn-danger">X</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
+</div>

@@ -1,6 +1,9 @@
 <div [@routerTransition]>
-    <h2 class="text-muted">Dashboard <small>Statistics Overview</small></h2>
-    <div class="row">
+    <app-page-header [heading]="'Inicio'" [dependencia]='[organigrama]' [icon]="'fa-edit'"></app-page-header>
+    <!--<h2 class="text-muted">
+        <small> {{organigrama.descripcion}}</small>
+    </h2>-->
+    <!--<div class="row">
         <div class="col-md-12">
             <ngb-carousel>
                 <ng-template ngbSlide *ngFor="let slider of sliders">
@@ -12,52 +15,154 @@
                 </ng-template>
             </ngb-carousel>
         </div>
-    </div>
+    </div>-->
     <hr>
     <div class="row">
         <div class="col-xl-3 col-lg-6">
-            <app-stat [bgClass]="'primary'" [icon]="'fa-comments'" [count]="26" [label]="'New Comments!'" ></app-stat>
+
+            <app-stat [bgClass]="claseExpOfi()" [icon]="'fa-archive'" [count]="estadistica.expedientes_en_oficina" [label]="'Expedientes en su     Oficina'"></app-stat>
         </div>
         <div class="col-xl-3 col-lg-6">
-            <app-stat [bgClass]="'warning'" [icon]="'fa-tasks'" [count]="12" [label]="'New task!'" ></app-stat>
+            <app-stat [bgClass]="claseExpSinRecOtraOfi()" [icon]="'fa-arrow-right'" [count]="estadistica.exp_sin_rec_en_otra_ofi" [label]="'Exp. con pases a Otra Oficina sin Recepción '"></app-stat>
         </div>
         <div class="col-xl-3 col-lg-6">
-            <app-stat [bgClass]="'success'" [icon]="'fa-shopping-cart'" [count]="124" [label]="'New Orders!'" ></app-stat>
+            <app-stat [bgClass]="claseExpSinRecMiOfi()" [icon]="'fa-arrow-left'" [count]="estadistica.exp_sin_rec_en_mi_ofi" [label]="'Exp. con pases a Su Oficina sin Recepción'"></app-stat>
         </div>
         <div class="col-xl-3 col-lg-6">
-            <app-stat [bgClass]="'danger'" [icon]="'fa-support'" [count]="13" [label]="'New Tickets!'"></app-stat>
+            <app-stat [bgClass]="claseExpSolOtraOfi()" [icon]="'fa-file-archive-o'" [count]="estadistica.exp_sol_por_otra_ofi" [label]="'Exp. solicitados por Otra Oficina'"></app-stat>
         </div>
     </div>
     <hr />
-    <ngb-alert [type]="alert.type" (close)="closeAlert(alert)" *ngFor="let alert of alerts">{{ alert.message }}</ngb-alert>
-    <hr />
+    <!--<ngb-alert [type]="alert.type" (close)="closeAlert(alert)" *ngFor="let alert of alerts">{{ alert.message }}</ngb-alert>
+    <hr />-->
     <div class="row">
-        <div class="col-lg-8">
-            <div class="card card-default">
-                <div class="card-header">
-                    <i class="fa fa-clock-o fa-fw"></i> Responsive Timeline
-                </div>
-                <!-- /.card-header -->
-                <app-timeline></app-timeline>
-                <!-- /.card-body -->
+        <div class="col-lg-12">
+            <div class="card-header">
+                <i class="fa fa-clock-o fa-fw"></i> Expedientes Más Antiguos en Oficina
             </div>
-            <!-- /.card -->
-        </div>
-        <!-- /.col-lg-8 -->
-        <div class="col-lg-4">
-            <div class="card card-default mb-3">
-                <div class="card-header">
-                    <i class="fa fa-bell fa-fw"></i> Notifications card
-                </div>
-                <!-- /.card-header -->
-                <app-notification></app-notification>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th style="width: 4.166%">Prefijo</th>
+                            <th style="width: 8.33%">Nro</th>
+                            <th style="width: 4.166%">Año</th>
+                            <th style="width: 8.33%">Extensión</th>
+                            <th style="width: 14%">F.Ingreso</th>
+                            <th style="width: 6%">Días Of</th>
+                            <th>Extracto</th>
+                            <th></th>
+                        </tr>
+                    </thead>
 
-            <app-chat></app-chat>
-            <!-- /.card .chat-card -->
+                    <tbody *ngFor="let expediente of pagedItems">
+                        <tr>
+                            <th scope="row">{{ expediente.prefijo }}</th>
+                            <th scope="row">{{ expediente.numero }}</th>
+                            <th scope="row">{{ expediente.anio }}</th>
+                            <th scope="row">{{ expediente.extension }}</th>
+                            <td>{{ formatDate(expediente.fecha_ingreso,2) }}</td>
+                            <td>{{ expediente.dias_oficina }}</td>
+                            <td>{{ expediente.estracto }}</td>
+                            <td>
+                                <button (click)="verExpediente(expediente)" type="button" class="btn btn-default" aria-label="Left Align">
+                                    <span class="fa fa-eye fa-lg" aria-hidden="true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- pager -->
+                <nav aria-label="Expedientes" *ngIf="pager.pages && pager.pages.length">
+                    <ul class="pagination pagination-sm justify-content-center">
+                        <li class="page-item" [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a class="page-link" (click)="setPage(1)">&lt;&lt;</a>
+                        </li>
+                        <li class="page-item" [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a class="page-link" (click)="setPage(pager.currentPage - 1)">&lt;</a>
+                        </li>
+                        <li class="page-item" *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                            <a class="page-link" (click)="setPage(page)">{{page}}</a>
+                        </li>
+                        <li class="page-item" [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a class="page-link" (click)="setPage(pager.currentPage + 1)">&gt;</a>
+                        </li>
+                        <li class="page-item" [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a class="page-link" (click)="setPage(pager.totalPages)">&gt;&gt;</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
-        <!-- /.col-lg-4 -->
+        <div class="col-lg-12">
+            <div class="card-header">
+                <i class="fa fa-bell fa-fw"></i> Expedientes Sin Recepción en Mi Oficina</div>
+            <div class="card-body table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 4.166%">Prefijo</th>
+                            <th style="width: 8.33%">Nro</th>
+                            <th style="width: 4.166%">Año</th>
+                            <th style="width: 8.33%">Extensión</th>
+                            <th style="width: 14%">F.Pase</th>
+                            <th>Extracto</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody *ngFor="let expediente of expedientessinrecibir">
+                        <tr>
+                            <th scope="row">{{ expediente.prefijo }}</th>
+                            <th scope="row">{{ expediente.numero }}</th>
+                            <th scope="row">{{ expediente.anio }}</th>
+                            <th scope="row">{{ expediente.extension }}</th>
+                            <td>{{ formatDate(expediente.fecha_pase,2) }}</td>
+                            <td>{{ expediente.estracto }}</td>
+                            <td>
+                                <button (click)="verExpediente(expediente)" type="button" class="btn btn-default" aria-label="Left Align">
+                                    <span class="fa fa-eye fa-lg" aria-hidden="true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="card-header">
+                <i class="fa fa-bell fa-fw"></i> Expedientes enviados a Otra Oficina Sin Recepción</div>
+            <div class="card-body table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 4.166%">Prefijo</th>
+                            <th style="width: 8.33%">Nro</th>
+                            <th style="width: 4.166%">Año</th>
+                            <th style="width: 8.33%">Extensión</th>
+                            <th style="width: 14%">F.Pase</th>
+                            <th>Extracto</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody *ngFor="let expediente of expedientessinrecepcion">
+                        <tr>
+                            <th scope="row">{{ expediente.prefijo }}</th>
+                            <th scope="row">{{ expediente.numero }}</th>
+                            <th scope="row">{{ expediente.anio }}</th>
+                            <th scope="row">{{ expediente.extension }}</th>
+                            <td>{{ formatDate(expediente.fecha_pase,2) }}</td>
+                            <td>{{ expediente.estracto }}</td>
+                            <td>
+                                    <button (click)="verExpediente(expediente)" type="button" class="btn btn-default" aria-label="Left Align">
+                                        <span class="fa fa-eye fa-lg" aria-hidden="true"></span>
+                                    </button>
+                                </td>                                
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>

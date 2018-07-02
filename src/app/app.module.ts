@@ -3,12 +3,22 @@ import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthGuard } from './shared';
+import { AutorizacionService } from './shared';
+import { StorageService } from './shared';
+import { DatabaseService } from './shared';
+import { PagerService } from './shared';
+import { GeneralService } from './shared';
+import { environment } from '../environments/environment';
+import { FormsModule } from '@angular/forms';
+import { TreeModule } from 'ng2-tree';
+import { ToasterModule, ToasterService } from 'angular2-toaster';
+
 
 // AoT requires an exported function for factories
 export function createTranslateLoader(http: HttpClient) {
@@ -23,6 +33,11 @@ export function createTranslateLoader(http: HttpClient) {
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
+        HttpModule,
+        FormsModule,
+        CommonModule,
+        ToasterModule,
+        TreeModule,        
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -33,7 +48,7 @@ export function createTranslateLoader(http: HttpClient) {
         AppRoutingModule
     ],
     declarations: [AppComponent],
-    providers: [AuthGuard],
+    providers: [AuthGuard,AutorizacionService,StorageService,DatabaseService,PagerService, GeneralService,ToasterService],
     bootstrap: [AppComponent]
 })
 export class AppModule {}
