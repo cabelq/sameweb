@@ -772,6 +772,8 @@ Namespace Controllers
                     ls_sql = " DELETE FROM ml.SA_numeracion_remito Where id_conexion = " & li_conexion_id
                     sqlComm.Transaction = lo_transaction
                     sqlComm.CommandText = ls_sql
+                    sqlComm.ExecuteNonQuery()
+
 
                     For Each bo_exp As PaseExpediente In aoPase.expedientes
                         sqlComm = New SqlCommand

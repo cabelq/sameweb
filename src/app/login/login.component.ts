@@ -59,6 +59,7 @@ export class LoginComponent implements AfterViewInit {
     }
 
     private correctLogin(data: Session) {
+        debugger;
         this.storageService.setearSessionActual(data);
         this.router.navigate(['/dashboard']);
     }

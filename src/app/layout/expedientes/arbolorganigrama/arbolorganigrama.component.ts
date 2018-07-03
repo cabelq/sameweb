@@ -128,7 +128,6 @@ export class ArbolorganigramaComponent implements AfterViewInit {
     )
   }
   public logEvent(e: NodeEvent): void {
-    console.log(e.node.children);
     if (e.node.children == undefined){
       this.arbolComponent.getController().collapse();
       this.onSeleccion.emit(e.node.node);  

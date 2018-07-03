@@ -45,9 +45,9 @@ Namespace Controllers
                     ls_sql &= " ,ORG_uid,ORG_est_trabajo, ORG_Fecha_Alta,ORG_Fecha_Baja ,ORG_Usar_CallCenter"
                     ls_sql &= " ,per_legajo_responsable, P.per_apellido + ' ' + P.per_nombre as Responsable, ORG_resp_f_desde, org_bloqueado"
                     ls_sql &= " ,org_archivo, org_externo, org_origen_escanea,org_destino_escanea"
-                    ls_sql &= " FROM ml.ORGANIGRAMA"
-                    ls_sql &= " where org_bloqueado = 'N'"
+                    ls_sql &= " FROM ml.ORGANIGRAMA O "
                     ls_sql &= " inner join ml.PE_Personal P ON (O.per_legajo_responsable = P.per_legajo) "
+                    ls_sql &= " where org_bloqueado = 'N'"
 
                     ls_sql &= " order by [ORG_Nivel] ,[ORG_Enlace_P_H],[ORG_Id_Organigrama]"
                     sqlComm.CommandText = ls_sql

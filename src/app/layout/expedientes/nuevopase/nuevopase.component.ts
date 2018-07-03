@@ -243,7 +243,7 @@ export class NuevopaseComponent implements OnInit {
   }*/
 
   imprimirRemito() {
-    
+    debugger;
     var doc = new jsPDF();
     //doc = this.generalService.cabeceraReporte(doc);
     doc.setFont("helvetica");
@@ -256,24 +256,17 @@ export class NuevopaseComponent implements OnInit {
     doc.setFontSize(9); 
     doc.text(85, 20, 'REMITO Nro ' + this.remito_nro );
     doc.roundedRect(13, 10, 190, 35, 2, 2, 'S');
+    doc.text(15, 15, 'SAME WEB' );
 
-    doc.roundedRect(13, 210, 190, 35, 2, 2, 'S');
-    doc.text(15, 215, 'Fecha: ');
-    doc.text(22, 215, this.formatDate(new Date(),2));
-    doc.text(15, 225, 'Emisor: ');
-    doc.text(15, 225,  this.storageService.obtenerSessionActual().parametros.organigrama_default.responsable);
-    //doc.text(15, 225,  this.storageService.obtenerSessionActual().nombre );
-    doc.text(80, 225,  '_________________________________________________' );
-    doc.text(80, 227,  'Firma y Aclaracion Responsable' );
-
-    var img = new Image;
+    /*var img = new Image;
     let me = this;
     img.onload = function () {
       doc.addImage(this, 15, 15);
       doc.save("remito_" + me.remito_nro +  ".pdf");
     };
     img.crossOrigin = "";  // for demo as we are at different origin than image
-    img.src = "/assets/images/Same_color.png";
+    img.src = "/assets/images/Same_color.png";*/
+
 
     /* doc.setFont("helvetica");
      doc.setFontType("bold");
@@ -291,7 +284,7 @@ export class NuevopaseComponent implements OnInit {
     doc.setFontType("normal");    
     doc.text(45, fila, this.pase.organigrama.id.toString() + ' ' +  this.pase.organigrama.descripcion );
     doc.setFontSize(6);
-    fila = fila + 5;
+    fila = fila + 15;
     //doc.text(11, fila, 'Id Pase ');
     doc.text(21, fila, 'Expediente ');
     doc.text(86, fila, 'Detalle de Expediente ');
@@ -303,10 +296,85 @@ export class NuevopaseComponent implements OnInit {
       doc.text(30, fila, exp.anio.toString());
       doc.text(35, fila, exp.extension);      
       doc.text(45, fila, this.formatDate(exp.fecha,2));      
-      doc.text(60, fila, exp.extracto.substring(0, 70));      
+      doc.text(70, fila, exp.extracto.substring(0, 70));      
       doc.text(150, fila, exp.iniciador.substring(0, 25));      
     }
+    fila = fila + 10;
+    doc.roundedRect(13, fila, 190, 20, 2, 2, 'S');
+    fila = fila + 5;
+    doc.text(15, fila, 'Fecha: ');
+    doc.text(25, fila, this.formatDate(new Date(),2));
+    fila = fila + 5;
+    doc.text(15, fila, 'Emisor: ');
+    doc.text(25, fila,  this.storageService.obtenerSessionActual().parametros.organigrama_default.responsable);
+    doc.text(80, fila -1,  '_________________________________________________' );
+    doc.text(90, fila + 2,  'Firma y Aclaracion Responsable' );
 
+    fila = fila + 5;
+    
+    doc.text(15, fila,  this.storageService.obtenerSessionActual().usuario);
+    fila = fila + 15;
+    doc.line(10, fila -1, 190, fila -1);    
+    //doc.text(15, fila -1,  '-----------------------------------------------------------------------------------------------------' );
+    fila = fila + 15;
+    doc.setFont("helvetica");
+    //doc.setFontType("bold"); 
+    doc.setFontSize(9); 
+    doc.text(156, fila, 'MUNICIPALIDAD DE LUJAN');
+    doc.text(15, fila -5, 'SAME WEB' );
+
+    doc.setFontSize(9); 
+    doc.text(85, fila, 'REMITO Nro ' + this.remito_nro );
+    doc.roundedRect(13, fila -10, 190, 35, 2, 2, 'S');
+
+
+    doc.setFontSize(7); 
+    fila = fila + 7;
+    doc.text(175, fila, 'Duplicado');
+    
+
+    doc.setFontType("bold");    
+    doc.text(15, fila, 'Oficina Origen ');
+    doc.setFontType("normal");    
+    doc.text(45, fila, this.storageService.obtenerSessionActual().dependencia);
+    fila = fila + 10;
+    doc.setFontType("bold");    
+    doc.text(15, fila, 'Oficina Destino ');
+    doc.setFontType("normal");    
+    doc.text(45, fila, this.pase.organigrama.id.toString() + ' ' +  this.pase.organigrama.descripcion );
+    doc.setFontSize(6);
+    fila = fila + 15;
+    //doc.text(11, fila, 'Id Pase ');
+    doc.text(21, fila, 'Expediente ');
+    doc.text(86, fila, 'Detalle de Expediente ');
+
+    for (let exp of this.pase.expedientes) {
+      fila = fila + 5;
+      doc.text(15, fila, exp.prefijo.toString());
+      doc.text(22, fila, exp.numero.toString()); 
+      doc.text(30, fila, exp.anio.toString());
+      doc.text(35, fila, exp.extension);      
+      doc.text(45, fila, this.formatDate(exp.fecha,2));      
+      doc.text(70, fila, exp.extracto.substring(0, 70));      
+      doc.text(150, fila, exp.iniciador.substring(0, 25));      
+    }
+    fila = fila + 10;
+    doc.roundedRect(13, fila-1, 190, 20, 2, 2, 'S');
+    fila = fila + 5;
+    doc.text(15, fila, 'Fecha: ');
+    doc.text(25, fila, this.formatDate(new Date(),2));
+    fila = fila + 5;
+    doc.text(15, fila, 'Emisor: ');
+    doc.text(25, fila,  this.storageService.obtenerSessionActual().parametros.organigrama_default.responsable);
+    doc.text(80, fila -1,  '_________________________________________________' );
+    doc.text(90, fila + 1,  'Firma y Aclaracion Responsable' );
+
+    fila = fila + 5;
+    
+    doc.text(15, fila,  this.storageService.obtenerSessionActual().usuario);
+
+    //doc.text(15, 225,  this.storageService.obtenerSessionActual().nombre );
+    doc.save("remito_" + this.remito_nro +  ".pdf");
   }
 
 

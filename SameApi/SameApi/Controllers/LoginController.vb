@@ -140,7 +140,7 @@ Namespace Controllers
                             Case "ID ORGANIGRAMA"
                                 lo_usuario.parametros.organigrama_default.id = lo_DataRow("valor_n")
                                 'lo_usuario.parametros.id_organigrama = lo_DataRow("valor_n")
-                                ls_organigrama = Str(lo_DataRow("valor_n")) + "-" + IIf(IsDBNull(lo_DataRow("valor_s")), "", lo_DataRow("valor_s"))
+                                ls_organigrama = Str(lo_DataRow("valor_n")) + IIf(IsDBNull(lo_DataRow("valor_s")) Or lo_DataRow("valor_s") = "", "", "-" + lo_DataRow("valor_s"))
                                 'lo_usuario.parametros.id_organigrama_otros = Str(lo_DataRow("valor_n")) + "-" + IIf(IsDBNull(lo_DataRow("valor_s")), "", lo_DataRow("valor_s"))
                             Case "PREFIJO"
                                 lo_usuario.parametros.prefijo = lo_DataRow("valor_s")
@@ -149,16 +149,19 @@ Namespace Controllers
 
                     sqlComm = New SqlCommand
                     sqlComm.Connection = sqlConn
-                    sqlComm.CommandText = "SELECT ORG_Descripcion FROM ml.ORGANIGRAMA Where ORG_Id_Organigrama = " & lo_usuario.parametros.organigrama_default.id
+                    sqlComm.CommandText = "SELECT ORG_Descripcion,O.per_legajo_responsable,L.per_apellido + ', ' + L.per_nombre as Responsable  FROM ml.ORGANIGRAMA O INNER JOIN ml.PE_Personal L ON (O.per_legajo_responsable = L.per_legajo) Where ORG_Id_Organigrama = " & lo_usuario.parametros.organigrama_default.id
                     sqlDataAdapt = New SqlDataAdapter(sqlComm)
                     lo_DataTable = New DataTable
                     sqlDataAdapt.Fill(lo_DataTable)
                     For Each lo_DataRow In lo_DataTable.Rows
                         lo_usuario.parametros.organigrama_default.descripcion = lo_DataRow("ORG_Descripcion")
+                        lo_usuario.parametros.organigrama_default.responsable = lo_DataRow("Responsable")
+                        lo_usuario.parametros.organigrama_default.responsable_legajo = lo_DataRow("per_legajo_responsable")
+
                     Next
                     sqlComm = New SqlCommand
                     sqlComm.Connection = sqlConn
-                    sqlComm.CommandText = "SELECT ORG_Id_Organigrama,ORG_Descripcion FROM ml.ORGANIGRAMA Where ORG_Id_Organigrama in (" & ls_organigrama.ToString().Replace("-", ",") & ")"
+                    sqlComm.CommandText = "SELECT ORG_Id_Organigrama, ORG_Descripcion,O.per_legajo_responsable,L.per_apellido + ', ' + L.per_nombre as Responsable  FROM ml.ORGANIGRAMA O INNER JOIN ml.PE_Personal L ON (O.per_legajo_responsable = L.per_legajo) Where ORG_Id_Organigrama IN (" & ls_organigrama.ToString().Replace("-", ",") & ")"
                     sqlDataAdapt = New SqlDataAdapter(sqlComm)
                     lo_DataTable = New DataTable
                     sqlDataAdapt.Fill(lo_DataTable)
@@ -171,6 +174,8 @@ Namespace Controllers
                         lo_organigrama = New DependenciaOrganigrama
                         lo_organigrama.id = lo_DataRow("ORG_Id_Organigrama")
                         lo_organigrama.descripcion = lo_DataRow("ORG_Descripcion")
+                        lo_organigrama.responsable = lo_DataRow("Responsable")
+                        lo_organigrama.responsable_legajo = lo_DataRow("per_legajo_responsable")
                         lo_usuario.parametros.organigramas.Add(lo_organigrama)
                         'lo_usuario.parametros.organigrama_descripcion_otros += lo_DataRow("ORG_Descripcion")
                         'i = 1
